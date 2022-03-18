@@ -106,6 +106,7 @@ function startMultiPlayerGame(socket) {
                 if (board[i][j] == '') {
                     board[i][j] = player;
                     socket.emit('player-move', {row: i, col: j});
+                    available--;
                     drawBoard();
 
                     yourTurn = false;
@@ -127,6 +128,7 @@ function startMultiPlayerGame(socket) {
 
     socket.on('player-move', move => {
         board[move.row][move.col] = enemy;
+        available--;
         drawBoard();
         yourTurn = true;
         turnDisplay.innerHTML = "Your Turn";
