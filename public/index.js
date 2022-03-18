@@ -148,6 +148,7 @@ function startSinglePlayer() {
     document.getElementById("input").style.display = "none";
     document.getElementById("game").style.display = "block";
     bestMove();
+    available--;
     drawBoard();
 
     function mousePressed(evt) {
