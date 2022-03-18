@@ -1,0 +1,27 @@
+{
+  "name": "tic-tac-toe-multiplayer",
+  "version": "1.0.0",
+  "description": "Multiplayer tic tac toe game",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+  "keywords": [
+    "sockets",
+    "multiplayer",
+    "tic-tac-toe",
+    "socket.io",
+    "express",
+    "heroku"
+  ],
+  "author": "Sriram Yadagiri",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "socket.io": "^4.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
