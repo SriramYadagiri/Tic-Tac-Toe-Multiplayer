@@ -1,6 +1,9 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
+var home = document.getElementById("home");
+var connections = document.getElementById("connections");
+var game = document.getElementById("game");
 var MPlayerButton = document.getElementById("multiplayerButton");
 var SPlayerButton = document.getElementById("singlePlayerButton");
 
@@ -40,12 +43,12 @@ function startMultiPlayer() {
 
     socket.on('player-number', (numb) => {
         if (numb == -1) {
-            document.getElementById("input").style.display = "block";
-            document.getElementById("connections").style.display = "none";
+            home.style.display = "block";
+            connections.style.display = "none";
             alert("Sorry, server is full");
         } else {
-            document.getElementById("input").style.display = "none";
-            document.getElementById("connections").style.display = "block";
+            home.style.display = "none";
+            connections.style.display = "block";
             playerNumb = parseInt(numb);
             if (playerNumb == 0) yourTurn = true;
             player = players[playerNumb];
@@ -91,11 +94,11 @@ function startMultiPlayer() {
 }
 
 function startMultiPlayerGame(socket) {
-    document.getElementById("connections").style.display = "none";
+    connections.style.display = "none";
     let turnDisplay = document.getElementById("turnDisplay");
     if (yourTurn) turnDisplay.innerHTML = "Your Turn";
     else turnDisplay.innerHTML = "Opponents Turn";
-    document.getElementById("game").style.display = "block";
+    game.style.display = "block";
     drawBoard();
 
     function mousePressed(evt) {
@@ -115,11 +118,7 @@ function startMultiPlayerGame(socket) {
                     let result = checkWinner();
                     if (result != null) {
                         socket.emit('game-over', result);
-                        gameOver = true;
-                        let resultP = document.getElementById("result");
-                        if (result == 'tie') resultP.innerHTML = 'Tie!';
-                        else resultP.innerHTML = `${result} wins!`;
-                        turnDisplay.innerHTML = "Game Over";
+                        handleWin(result, true);
                     }
                 }
         }
@@ -136,17 +135,13 @@ function startMultiPlayerGame(socket) {
 
     socket.on('game-over', result => {
         drawBoard();
-        gameOver = true;
-        let resultP = document.getElementById("result");
-        if (result == 'tie') resultP.innerHTML = 'Tie!';
-        else resultP.innerHTML = `${result} wins!`;
-        turnDisplay.innerHTML = "Game Over";
+        handleWin(result, true);
     });
 }
 
 function startSinglePlayer() {
-    document.getElementById("input").style.display = "none";
-    document.getElementById("game").style.display = "block";
+    home.style.display = "none";
+    game.style.display = "block";
     bestMove();
     available--;
     drawBoard();
@@ -160,13 +155,10 @@ function startSinglePlayer() {
                     board[i][j] = human;
                     available--;
                     drawBoard();
-    
-                    let resultP = document.getElementById("result");
+
                     let result = checkWinner();
                     if (result != null) {
-                        gameOver = true;
-                        if (result == 'tie') resultP.innerHTML = 'Tie!';
-                        else resultP.innerHTML = `${result} wins!`;
+                        handleWin(result, false);
                         return;
                     }
     
@@ -176,9 +168,7 @@ function startSinglePlayer() {
 
                     result = checkWinner();
                     if (result != null) {
-                        gameOver = true;
-                        if (result == 'tie') resultP.innerHTML = 'Tie!';
-                        else resultP.innerHTML = `${result} wins!`;
+                        handleWin(result, false);
                         return;
                     }
                 }
@@ -187,42 +177,6 @@ function startSinglePlayer() {
       
     canvas.addEventListener('click', mousePressed);
 }
-
-function equals3(a, b, c){
-    return (a==b && b==c && a!='');
-}
-
-function checkWinner() {
-    let winner = null;
-  
-    // horizontal
-    for (let i = 0; i < 3; i++) {
-      if (equals3(board[i][0], board[i][1], board[i][2])) {
-        winner = board[i][0];
-      }
-    }
-  
-    // Vertical
-    for (let i = 0; i < 3; i++) {
-      if (equals3(board[0][i], board[1][i], board[2][i])) {
-        winner = board[0][i];
-      }
-    }
-  
-    // Diagonal
-    if (equals3(board[0][0], board[1][1], board[2][2])) {
-      winner = board[0][0];
-    }
-    if (equals3(board[2][0], board[1][1], board[0][2])) {
-      winner = board[2][0];
-    }
-  
-    if (winner == null && available == 0) {
-      return 'tie';
-    } else {
-      return winner;
-    }
-  }
 
 function drawBoard(){
     rect(0, 0, canvas.width, canvas.height, "rgb(100, 100, 100)");
@@ -247,6 +201,14 @@ function drawBoard(){
             }
         }
     }
+}
+
+function handleWin(result, multiplayer) {
+    gameOver = true;
+    let resultP = document.getElementById('result');
+    if (result == 'tie') resultP.innerHTML = 'Tie!';
+    else resultP.innerHTML = `${result} wins!`;
+    if (multiplayer) turnDisplay.innerHTML = "Game Over";
 }
 
 function rect(x, y, width, height, color="black"){
