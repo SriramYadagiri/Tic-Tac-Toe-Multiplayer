@@ -55,6 +55,9 @@ io.on('connection', socket => {
     });
 
     socket.on('game-over', result => {
+        for (i in connections) {
+            connections[i] = false;
+        }
         socket.broadcast.emit('game-over', result);
     });
 });

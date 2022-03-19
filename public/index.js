@@ -6,9 +6,11 @@ var connections = document.getElementById("connections");
 var game = document.getElementById("game");
 var MPlayerButton = document.getElementById("multiplayerButton");
 var SPlayerButton = document.getElementById("singlePlayerButton");
-
+var reset = document.getElementById('resetButton');
+var exit = document.getElementById('exit');
 var result = document.getElementById('result').innerHTML;
 var readyButton = document.getElementById('readyButton');
+
 let gameOver = false;
 
 const w = 200;
@@ -209,6 +211,19 @@ function handleWin(result, multiplayer) {
     if (result == 'tie') resultP.innerHTML = 'Tie!';
     else resultP.innerHTML = `${result} wins!`;
     if (multiplayer) turnDisplay.innerHTML = "Game Over";
+    reset.style.display = 'block';
+    exit.style.display = 'block';
+    reset.addEventListener('click', () => {
+        game.style.display = 'none';
+        connections.style.display = 'block';
+        socket.emit('check-players');
+    });
+    
+    exit.addEventListener('click', () => {
+        game.style.display = 'none';
+        home.style.display = 'block';
+        socket.emit('disconnect');
+    });
 }
 
 function rect(x, y, width, height, color="black"){
