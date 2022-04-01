@@ -38,8 +38,12 @@ io.on('connection', socket => {
     });
 
     socket.on('player-ready', () => {
-        socket.broadcast.emit('enemy-ready', playerInd);
-        connections[playerInd] = true;
+        if (connections[playerInd]) {
+            connections[playerInd] = false;
+        } else {
+            socket.broadcast.emit('enemy-ready', playerInd);
+            connections[playerInd] = true;
+        }
     });
 
     socket.on('check-players', () => {
@@ -51,13 +55,11 @@ io.on('connection', socket => {
     });
 
     socket.on('player-move', move => {
+        console.log("Player " + playerInd + " made a move: " + move);
         socket.broadcast.emit('player-move', move);
     });
 
     socket.on('game-over', result => {
-        for (i in connections) {
-            connections[i] = false;
-        }
         socket.broadcast.emit('game-over', result);
     });
 });

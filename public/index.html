@@ -10,7 +10,7 @@
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <div id="home">
+    <div id="input">
         <button id="multiplayerButton">Multiplayer</button>
         <button id="singlePlayerButton">Single Player</button>
     </div>
@@ -28,12 +28,11 @@
         </div>
 
         <button id="readyButton">Ready</button>
+        <button id="hScreen">Home Screen</button>
     </div>
     <div id="game">
         <h1 id="turnDisplay"></h1>
         <canvas id="canvas" width="600" height="600"></canvas>
-        <button id="resetButton" style="display: none;">Play Again</button>
-        <button id="exit" style="display: none;">Leave Game</button>
         <h1 id="result"></h1>
     </div>
     <script src="index.js"></script>
